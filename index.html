@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patrícia - 50 Anos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        :root {
+            --gold: #d4af37;
+            --dark-gold: #996515;
+            --ivory: #fdfaf5;
+            --silver: #c0c0c0;
+            --pink: #ffb6c1;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            font-family: 'Georgia', serif;
+            background: #ebe1cf;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* --- BALÕES FLUTUANTES --- */
+        .background-balloons {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .balloon {
+            position: absolute;
+            bottom: -100px;
+            width: 45px;
+            height: 55px;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: float-up 12s infinite linear;
+            box-shadow: inset -5px -10px 15px rgba(0,0,0,0.1);
+        }
+
+        .balloon::after {
+            content: "";
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            width: 1px;
+            height: 25px;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes float-up {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-120vh) rotate(20deg); opacity: 0; }
+        }
+
+        /* --- ENVELOPE REALISTA --- */
+        .envelope-wrapper {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .envelope {
+            width: 320px;
+            height: 200px;
+            background: #efead8;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Dobras da carta */
+        .envelope::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0;
+            width: 0; height: 0;
+            border-style: solid;
+            border-width: 100px 160px 0 160px;
+            border-color: #e5dfcc transparent transparent transparent;
+            z-index: 2;
+        }
+
+        .envelope::after {
+            content: "";
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 0; height: 0;
+            border-style: solid;
+            border-width: 0 160px 110px 160px;
+            border-color: transparent transparent #f4f0e2 transparent;
+            z-index: 1;
+        }
+
+        .seal {
+            width: 75px;
+            height: 75px;
+            background: radial-gradient(circle, var(--gold), var(--dark-gold));
+            border-radius: 50%;
+            border: 3px solid #fff;
+            color: white;
+            font-size: 2.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 5;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            font-family: 'Great Vibes', cursive, serif;
+            transition: 0.3s;
+        }
+
+        .envelope-wrapper:hover .seal { transform: scale(1.1); }
+
+        /* --- CONTEÚDO PRINCIPAL --- */
+        #main-invite {
+            display: none;
+            position: relative;
+            z-index: 15;
+            width: 90%;
+            max-width: 400px;
+            background: var(--ivory);
+            background-image: url('https://www.transparenttextures.com/patterns/old-map.png');
+            padding: 35px 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 6px double var(--gold);
+            animation: slideIn 1s ease-out;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 { font-size: 2.5rem; color: var(--dark-gold); margin: 10px 0; }
+        .age { font-size: 1.2rem; color: #666; letter-spacing: 4px; }
+        .quote { font-style: italic; margin: 20px 0; color: #444; line-height: 1.5; font-size: 1.1rem; }
+
+        /* --- MENU --- */
+        .nav-menu {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 25px;
+            gap: 10px;
+        }
+
+        .btn {
+            background: white;
+            border: 1px solid var(--gold);
+            padding: 12px 5px;
+            border-radius: 8px;
+            color: var(--dark-gold);
+            cursor: pointer;
+            flex: 1;
+            transition: 0.3s;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .btn i { display: block; font-size: 1.4rem; margin-bottom: 5px; }
+        .btn:hover { background: var(--gold); color: white; transform: translateY(-3px); }
+
+        /* --- SLIDER FOTOS (AJUSTE PARA FOTOS INTEIRAS) --- */
+        .swiper {
+            width: 100%;
+            height: 320px; /* Aumentado para acomodar melhor fotos verticais */
+            display: none;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f9f9f9;
+        }
+
+        .swiper-slide img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain; /* Garante que a foto apareça inteira */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        #bible-box {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(212, 175, 55, 0.08);
+            border-radius: 8px;
+            font-style: italic;
+            border-left: 4px solid var(--gold);
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div class="background-balloons" id="balloons"></div>
+
+    <audio id="musica" src="musica.MPEG" loop></audio>
+
+    <div class="envelope-wrapper" id="env-container" onclick="startExperience()">
+        <div class="envelope">
+            <div class="seal">P</div>
+        </div>
+        <p style="color: var(--dark-gold); font-weight: bold; margin-top: 20px; letter-spacing: 1px;">CLIQUE NA CARTA PARA ABRIR</p>
+    </div>
+
+    <main id="main-invite">
+        <div class="age">50 ANOS</div>
+        <h1>Patrícia</h1>
+        <p style="text-transform: uppercase; color: var(--gold); font-weight: bold; font-size: 0.85rem; letter-spacing: 1px;">Culto em Ação de Graças</p>
+        
+        <p class="quote">
+            "Um dia especial para ser comemorado ao lado de pessoas especiais como você!"
+        </p>
+
+        <div class="nav-menu">
+            <button class="btn" onclick="window.open('https://maps.app.goo.gl/wBjGRP7Bs1odU8cL8')">
+                <i class="fas fa-location-dot"></i> LOCAL
+            </button>
+            <button class="btn" onclick="toggleGallery()">
+                <i class="fas fa-camera"></i> FOTOS
+            </button>
+            <button class="btn" onclick="toggleBible()">
+                <i class="fas fa-book-open"></i> PALAVRA
+            </button>
+        </div>
+
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="fotos/foto1.jpeg" alt="Foto 1"></div>
+                <div class="swiper-slide"><img src="fotos/foto2.jpeg" alt="Foto 2"></div>
+                <div class="swiper-slide"><img src="fotos/foto3.jpeg" alt="Foto 3"></div>
+                <div class="swiper-slide"><img src="fotos/foto4.jpeg" alt="Foto 4"></div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+
+        <div id="bible-box">
+            <p id="verse"></p>
+            <strong id="ref" style="font-size: 0.8rem; color: var(--dark-gold);"></strong>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        // Balões com novas cores: Ouro, Branco, Prata e Rosa
+        const balloonContainer = document.getElementById('balloons');
+        const colors = ['#d4af37', '#ffffff', '#e5e5e5', '#ffb6c1', '#f8d7da', '#cfb53b'];
+        
+        for(let i=0; i < 30; i++) {
+            let b = document.createElement('div');
+            b.className = 'balloon';
+            b.style.left = Math.random() * 100 + '%';
+            b.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            b.style.animationDelay = (Math.random() * 12) + 's';
+            b.style.width = (Math.random() * 20 + 25) + 'px';
+            b.style.height = (parseFloat(b.style.width) * 1.3) + 'px';
+            balloonContainer.appendChild(b);
+        }
+
+        function startExperience() {
+            document.getElementById('env-container').style.display = 'none';
+            document.getElementById('main-invite').style.display = 'block';
+            const audio = document.getElementById('musica');
+            audio.play().catch(() => console.log("Áudio aguardando interação."));
+        }
+
+        const swiper = new Swiper(".mySwiper", {
+            loop: true,
+            effect: "fade",
+            fadeEffect: { crossFade: true },
+            autoplay: { delay: 3500 },
+            pagination: { el: ".swiper-pagination", clickable: true },
+        });
+
+        function toggleGallery() {
+            const s = document.querySelector('.swiper');
+            const isVisible = s.style.display === 'block';
+            s.style.display = isVisible ? 'none' : 'block';
+            document.getElementById('bible-box').style.display = 'none';
+            if(!isVisible) swiper.update();
+        }
+
+        const verses = [
+            { t: "Este é o dia que o Senhor fez; regozijemo-nos e alegremo-nos nele.", r: "Salmos 118:24" },
+            { t: "Até aqui nos ajudou o Senhor.", r: "1 Samuel 7:12" },
+            { t: "Ensina-nos a contar os nossos dias, para que alcancemos coração sábio.", r: "Salmos 90:12" },
+            { t: "O Senhor te abençoe e te guarde.", r: "Números 6:24" },
+            { t: "Alegrem-se sempre no Senhor. Novamente direi: Alegrem-se!", r: "Filipenses 4:4" }
+        ];
+
+        function toggleBible() {
+            const box = document.getElementById('bible-box');
+            document.querySelector('.swiper').style.display = 'none';
+            const random = verses[Math.floor(Math.random() * verses.length)];
+            document.getElementById('verse').innerText = `"${random.t}"`;
+            document.getElementById('ref').innerText = random.r;
+            box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+        }
+    </script>
+</body>
+</html>
